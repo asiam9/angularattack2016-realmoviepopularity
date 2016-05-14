@@ -45,3 +45,9 @@
   right: 0;
   top: 24px;
 }
+
+@media (max-width: 600px) {
+  .autocomplete-results {
+    max-height: auto;
+  }
+}

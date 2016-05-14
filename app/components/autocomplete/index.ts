@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/common';
 import { Http } from '@angular/http';
+import { Router } from '@angular/router-deprecated';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/Rx';
@@ -44,7 +45,8 @@ export class RMPAutocomplete {
 
   constructor(private _formBuilder: FormBuilder,
               private _http: Http,
-              private _element: ElementRef) {
+              private _element: ElementRef,
+              private _router: Router) {
 
     const API_URL: string = 'https://www.omdbapi.com/?s=';
 
@@ -164,8 +166,14 @@ export class RMPAutocomplete {
     }
   }
 
+  /**
+   * Navigates to movie stats page.
+   */
   select(result: Object) {
-    console.log(result);
+    this._router.navigate(['Stats', {
+      year: result['year'],
+      title: result['title']
+    }]);
   }
 
 }
