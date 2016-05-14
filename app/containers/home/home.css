@@ -1,6 +1,40 @@
 .page-container {
   position: absolute;
-  left: calc(50% - 310px);
+  left: calc(50% - 260px);
   top: calc(50% - 50px);
-  width: 620px;
+  width: 520px;
+}
+
+.logo {
+  color: #f44336;
+  cursor: default;
+  float: left;
+  font-size: 100px;
+  margin-top: -20px;
+}
+
+.autocomplete-container {
+  float: right;
+  width: 400px;
+}
+
+@media (max-width: 650px) {
+  .page-container {
+    left: 0;
+    margin: 0 auto;
+    position: absolute;
+    text-align: center;
+    top: calc(50% - 120px);
+    width: 100%;
+  }
+
+  .logo {
+    float: none;
+  }
+
+  .autocomplete-container {
+    float: none;
+    margin: 0 auto;
+    width: 90%;
+  }
 }
