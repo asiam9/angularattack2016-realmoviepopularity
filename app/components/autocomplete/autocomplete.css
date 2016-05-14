@@ -26,6 +26,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.autocomplete-result.active {
+  background: rgb(238,238,238);
+  cursor: pointer;
+}
 
 .search-progress {
   height: 2px;

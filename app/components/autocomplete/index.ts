@@ -2,6 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/common';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+
 import 'rxjs/Rx';
 
 @Component({
@@ -21,7 +22,7 @@ import 'rxjs/Rx';
       </form>
 
       <ul #resultsView class="autocomplete-results" [hidden]="!isFocused">
-        <li class="autocomplete-result" *ngFor="let res of results">
+        <li class="autocomplete-result" (mouseover)="markAsActive(res)" [class.active]="res.active" *ngFor="let res of results">
           {{ res.Title }} ({{res.Year}})
         </li>
 
@@ -52,12 +53,24 @@ export class RMPAutocomplete {
     });
 
     this.autocompleteForm.controls.autocomplete.valueChanges
+
+      // wait 200ms before fetching the results
       .debounceTime(200)
+
+      // show progress indicator
       .do(() => this.isProcessing = true)
+
+      // load the results
       .switchMap(query => this._http.get(`${API_URL}${query}`))
+
+      // process the data
       .map(res => res.json())
       .map(res => res.Search)
+
+      // hide progress indicator
       .do(() => this.isProcessing = false)
+
+      // show results
       .subscribe(res => this.results = res);
   }
 
@@ -81,6 +94,17 @@ export class RMPAutocomplete {
     } while (clickedEl);
 
     this.isFocused = inside;
+  }
+
+  /**
+   * Marks the movie as acitve.
+   */
+  markAsActive(result: Object) {
+    this.results.forEach(res => res['active'] = false);
+
+    if (result) {
+      result['active'] = true;
+    }
   }
 
 }
