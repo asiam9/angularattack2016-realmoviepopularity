@@ -1,9 +1,13 @@
 {
-  "name": "angular2-quickstart",
+  "name": "real-movie-popularity",
   "version": "1.0.0",
   "scripts": {
     "start": "npm run lite",
     "lite": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rumblex/angularattack2016-realmoviepopularity"
   },
   "license": "ISC",
   "dependencies": {
