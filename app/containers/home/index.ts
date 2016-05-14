@@ -1,8 +1,8 @@
 import { Component, NgZone } from '@angular/core';
-import { RMPAutocomplete } from '../components/autocomplete/index'
+import { RMPAutocomplete } from '../../components/autocomplete/index'
 
 @Component({
-  styleUrls: ['../app/containers/home.css'],
+  styleUrls: ['../app/containers/home/home.css'],
   selector: 'rmp-home',
   template: `
     <div class="page-container">

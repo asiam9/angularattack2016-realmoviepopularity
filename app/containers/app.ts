@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouteConfig, RouterOutlet } from '@angular/router-deprecated';
-import { RMPHome } from './home';
+import { RMPHome } from './home/index';
 
 @Component({
     selector: 'rmp-app',
