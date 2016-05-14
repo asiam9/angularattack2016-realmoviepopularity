@@ -1,0 +1,10 @@
+.autocomplete {
+  position: relative;
+}
+.search-icon {
+  color: #aaa;
+  font-size: 20px;
+  position: absolute;
+  right: 0;
+  top: 24px;
+}

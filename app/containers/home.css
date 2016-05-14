@@ -1,0 +1,6 @@
+.page-container {
+  position: absolute;
+  left: calc(50% - 310px);
+  top: calc(50% - 50px);
+  width: 620px;
+}
