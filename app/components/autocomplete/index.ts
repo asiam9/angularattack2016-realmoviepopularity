@@ -15,14 +15,14 @@ import 'rxjs/Rx';
     <div class="autocomplete">
 
       <form [ngFormModel]="autocompleteForm" class="mdl-textfield mdl-js-textfield mdl-textfield--full-width">
-        <input #inputView ngControl="autocomplete" (focus)="isFocused = true" class="mdl-textfield__input" type="text" id="autocomplete" autocomplete="off">
+        <input #inputView ngControl="autocomplete" (focus)="isFocused = true" (keyup)="handleKeyboard($event)" class="mdl-textfield__input" type="text" id="autocomplete" autocomplete="off">
         <label class="mdl-textfield__label" for="autocomplete">Search...</label>
         <div [hidden]="!isProcessing" class="mdl-progress mdl-js-progress mdl-progress__indeterminate search-progress"></div>
         <i class="material-icons search-icon">search</i>
       </form>
 
       <ul #resultsView class="autocomplete-results" [hidden]="!isFocused">
-        <li class="autocomplete-result" (mouseover)="markAsActive(res)" [class.active]="res.active" *ngFor="let res of results">
+        <li (click)="select(res)" (mouseover)="markAsActive(res)" [class.active]="res.active" *ngFor="let res of results" class="autocomplete-result">
           {{ res.Title }} ({{res.Year}})
         </li>
 
@@ -71,7 +71,13 @@ export class RMPAutocomplete {
       .do(() => this.isProcessing = false)
 
       // show results
-      .subscribe(res => this.results = res);
+      .subscribe(res => {
+        this.results = res;
+
+        if (this.results && this.results.length > 0) {
+          this.markAsActive(this.results[0]);
+        }
+      });
   }
 
   ngAfterViewInit() {
@@ -97,6 +103,57 @@ export class RMPAutocomplete {
   }
 
   /**
+   * Handles keyboard events, navigates through the results view when pressing up and down buttons.
+   */
+  handleKeyboard(event: KeyboardEvent) {
+
+    const ARROW_UP: number = 38;
+    const ARROW_DOWN: number = 40;
+    const ENTER: number = 13;
+
+    const RESULT_HEIGHT: number = 48;
+    const RESULTS_HEIGHT: number = 300;
+
+    if (this.results && this.results.length > 0) {
+
+      if (event.keyCode === ARROW_UP || event.keyCode === ARROW_DOWN) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        let active = this.results.filter(res => res['active'])[0];
+        this.results.forEach((res, index) => {
+          if (res === active) {
+            let newIndex;
+
+            // calculate new active index based on the key pressed
+            if (event.keyCode === ARROW_UP) {
+              newIndex = index ? index - 1 : this.results.length - 1;
+            } else if (event.keyCode === ARROW_DOWN) {
+              newIndex = (index + 1) % this.results.length;
+            }
+
+            // mark new result as active
+            this.markAsActive(this.results[newIndex]);
+
+            // scroll the results list to keep the active item visible
+            let newScrollTop = RESULT_HEIGHT * newIndex;
+            if (newScrollTop > (this._resultsView.nativeElement.scrollTop + RESULTS_HEIGHT - RESULT_HEIGHT) ||
+                newScrollTop < (this._resultsView.nativeElement.scrollTop)) {
+              this._resultsView.nativeElement.scrollTop = RESULT_HEIGHT * newIndex;
+            }
+          }
+        });
+      } else if (event.keyCode === ENTER) {
+        let active = this.results.filter(res => res['active'])[0];
+
+        if (active) {
+          this.select(active);
+        }
+      }
+    }
+  }
+
+  /**
    * Marks the movie as acitve.
    */
   markAsActive(result: Object) {
@@ -105,6 +162,10 @@ export class RMPAutocomplete {
     if (result) {
       result['active'] = true;
     }
+  }
+
+  select(result: Object) {
+    console.log(result);
   }
 
 }

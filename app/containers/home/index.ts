@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { RMPAutocomplete } from '../../components/autocomplete/index'
 
 @Component({
@@ -13,9 +13,8 @@ import { RMPAutocomplete } from '../../components/autocomplete/index'
 })
 export class RMPHome {
 
-  constructor(private _zone: NgZone) {
+  constructor() {
     setTimeout(() => {
-      this._zone.run(() => undefined);
       window['componentHandler'].upgradeAllRegistered();
     }, 50);
   }
