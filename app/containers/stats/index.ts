@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouteParams } from '@angular/router-deprecated';
 import { RMPAutocomplete } from '../../components/autocomplete/index';
 
 @Component({
@@ -9,7 +10,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <span class="mdl-layout-title autocomplete-container">
-            <rmp-autocomplete></rmp-autocomplete>
+            <rmp-autocomplete [movie]="movie"></rmp-autocomplete>
           </span>
         </div>
 
@@ -39,9 +40,16 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
 })
 export class RMPStats {
 
-  constructor() {
+  movie: Object;
+
+  constructor(private _routeParams: RouteParams) {
     setTimeout(() => {
       window['componentHandler'].upgradeAllRegistered();
     }, 50);
+
+    this.movie = {
+      Title: decodeURI(this._routeParams.get('title')),
+      Year: parseInt(this._routeParams.get('year')) || undefined
+    };
   }
 }

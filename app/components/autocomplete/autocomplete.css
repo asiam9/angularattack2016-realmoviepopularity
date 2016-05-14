@@ -46,6 +46,21 @@
   top: 24px;
 }
 
+.inverse {
+  margin-top: -15px;
+}
+.inverse .textfield__input {
+  color: #fff;
+}
+.inverse .autocomplete-results {
+  background: #fff;
+  z-index: 5;
+}
+.inverse .autocomplete-result {
+  background: fff;
+  color: #000;
+}
+
 @media (max-width: 600px) {
   .autocomplete-results {
     max-height: auto;

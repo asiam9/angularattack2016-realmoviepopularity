@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, Input, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/common';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router-deprecated';
@@ -13,10 +13,10 @@ import 'rxjs/Rx';
     '(document:click)': 'handleClick($event)',
   },
   template: `
-    <div class="autocomplete">
+    <div class="autocomplete" [class.inverse]="isInversed">
 
       <form [ngFormModel]="autocompleteForm" class="mdl-textfield mdl-js-textfield mdl-textfield--full-width">
-        <input #inputView ngControl="autocomplete" (focus)="isFocused = true" (keyup)="handleKeyboard($event)" class="mdl-textfield__input" type="text" id="autocomplete" autocomplete="off">
+        <input #inputView [(ngModel)]="query" ngControl="autocomplete" (focus)="isFocused = true" (keyup)="handleKeyboard($event)" class="mdl-textfield__input" type="text" id="autocomplete" autocomplete="off">
         <label class="mdl-textfield__label" for="autocomplete">Search...</label>
         <div [hidden]="!isProcessing" class="mdl-progress mdl-js-progress mdl-progress__indeterminate search-progress"></div>
         <i class="material-icons search-icon">search</i>
@@ -35,13 +35,16 @@ export class RMPAutocomplete {
 
   @ViewChild('inputView') private _inputView: ElementRef;
   @ViewChild('resultsView') private _resultsView: ElementRef;
+  @Input('movie') movie: Object;
 
   private autocompleteForm: any;
 
   protected isFocused: boolean = false;
   protected isProcessing: boolean = false;
+  protected isInversed: boolean = false;
 
   public results: Object[];
+  public query: string;
 
   constructor(private _formBuilder: FormBuilder,
               private _http: Http,
@@ -83,9 +86,15 @@ export class RMPAutocomplete {
   }
 
   ngAfterViewInit() {
+    if (this.movie && this.movie['Title']) {
+      this.query = this.movie['Title'];
+      this.isInversed = true;
+    } else {
+      this.query = '';
 
-    // focus input when the component is loaded
-    this._inputView.nativeElement.focus();
+      // focus input when the component is loaded
+      this._inputView.nativeElement.focus();
+    }
   }
 
   /**
@@ -115,6 +124,8 @@ export class RMPAutocomplete {
 
     const RESULT_HEIGHT: number = 48;
     const RESULTS_HEIGHT: number = 300;
+
+    const MIN_QUERY: number = 3;
 
     if (this.results && this.results.length > 0) {
 
@@ -150,6 +161,10 @@ export class RMPAutocomplete {
 
         if (active) {
           this.select(active);
+        } else if (this.query.length > MIN_QUERY) {
+          this.select({
+            Title: this.query
+          });
         }
       }
     }
@@ -171,8 +186,8 @@ export class RMPAutocomplete {
    */
   select(result: Object) {
     this._router.navigate(['Stats', {
-      year: result['year'],
-      title: result['title']
+      year: result['Year'],
+      title: result['Title']
     }]);
   }
 
