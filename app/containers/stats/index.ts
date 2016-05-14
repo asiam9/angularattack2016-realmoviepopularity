@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouteParams } from '@angular/router-deprecated';
+import { Http } from '@angular/http';
 import { RMPAutocomplete } from '../../components/autocomplete/index';
 
 @Component({
@@ -25,7 +26,45 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
       </div>
       <main class="mdl-layout__content">
         <section class="mdl-layout__tab-panel" id="scroll-tab-1">
-          <div class="page-content">Info</div>
+          <div class="page-content info-container">
+            <h3 class="movie-title">{{ movieInfo.Title }}</h3>
+            <h6 class="movie-year">{{ movieInfo.Year }}</h6>
+            <div class="clearfix"></div>
+            <hr>
+            <div class="mdl-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+                <img [src]="movieInfo.Poster" class="movie-poster" />
+              </div>
+              <div class="mdl-cell mdl-cell--4-col">
+                <dl>
+                  <dt>Genre</dt>
+                  <dd>{{ movieInfo.Genre }}</dd>
+                  <dt>Director</dt>
+                  <dd>{{ movieInfo.Director }}</dd>
+                  <dt>Writer</dt>
+                  <dd>{{ movieInfo.Writer }}</dd>
+                  <dt>Actors</dt>
+                  <dd>{{ movieInfo.Actors }}</dd>
+                  <dt>Released</dt>
+                  <dd>{{ movieInfo.Released }}</dd>
+                  <dt>Runtime</dt>
+                  <dd>{{ movieInfo.Runtime }}</dd>
+                </dl>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col">
+                <dl>
+                  <dt>Plot</dt>
+                  <dd>{{ movieInfo.Plot }}</dd>
+                  <dt>Awards</dt>
+                  <dd>{{ movieInfo.Awards }}</dd>
+                  <dt>Metascore</dt>
+                  <dd>{{ movieInfo.Metascore }}</dd>
+                  <dt>IMDB</dt>
+                  <dd>{{ movieInfo.imdbRating }} <span class="hint">({{ movieInfo.imdbVotes }})</span></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
         </section>
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-2">
           <div class="page-content">Map</div>
@@ -41,8 +80,11 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
 export class RMPStats {
 
   movie: Object;
+  movieInfo: Object = {};
 
-  constructor(private _routeParams: RouteParams) {
+  constructor(private _routeParams: RouteParams,
+              private _http: Http) {
+
     setTimeout(() => {
       window['componentHandler'].upgradeAllRegistered();
     }, 50);
@@ -51,5 +93,13 @@ export class RMPStats {
       Title: decodeURI(this._routeParams.get('title')),
       Year: parseInt(this._routeParams.get('year')) || undefined
     };
+
+    let title: string = this.movie['Title'],
+        year: number = this.movie['Year'];
+
+    // get full movie info
+    this._http.get(`https://www.omdbapi.com/?t=${title}&y=${year}&plot=full&r=json`)
+      .map(res => res.json())
+      .subscribe(res => this.movieInfo = res);
   }
 }

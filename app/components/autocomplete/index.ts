@@ -51,8 +51,6 @@ export class RMPAutocomplete {
               private _element: ElementRef,
               private _router: Router) {
 
-    const API_URL: string = 'https://www.omdbapi.com/?s=';
-
     this.autocompleteForm = this._formBuilder.group({
       'autocomplete': ['', Validators.required]
     });
@@ -66,7 +64,7 @@ export class RMPAutocomplete {
       .do(() => this.isProcessing = true)
 
       // load the results
-      .switchMap(query => this._http.get(`${API_URL}${query}`))
+      .switchMap(query => this._http.get(`https://www.omdbapi.com/?s=${query}`))
 
       // process the data
       .map(res => res.json())
