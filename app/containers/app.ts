@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
+import { RouteConfig, RouterOutlet } from '@angular/router-deprecated';
+import { RMPHome } from './home';
 
 @Component({
-    selector: 'my-app',
-    template: '<h1>Real Movie Popularity</h1><p>This project runs!</p>'
+    selector: 'rmp-app',
+    template: `<router-outlet></router-outlet>`,
+    directives: [RouterOutlet]
 })
+@RouteConfig([
+  {path: '/', name: 'Home', component: RMPHome, useAsDefault: true}
+])
 export class AppComponent {
-    
+
 }
