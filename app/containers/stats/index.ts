@@ -220,7 +220,11 @@ export class RMPStats {
     // update chart data every 10 seconds
     this._interval = setInterval(function() {
       var data = window['google'].visualization.arrayToDataTable(groupBy(self.peers, 'country'));
-      chart.draw(data, {});
+      chart.draw(data, {
+        colorAxis: {
+          colors: ['#C8E6C9', '#388E3C']
+        }
+      });
     }, 10*1000);
   }
 
