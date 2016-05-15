@@ -53,7 +53,7 @@ export class RMPHint {
         after: '.'
       },
       {
-        before: 'Russia loves ',
+        before: 'Russia, Brazil and France love ',
         title: 'The Revenant',
         link: 'The Revenant',
         year: 2015,

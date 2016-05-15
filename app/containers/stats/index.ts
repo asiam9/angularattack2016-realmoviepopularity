@@ -30,7 +30,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
           Loaded!
         </div>
         <div class="progress" [hidden]="!isProcessing || !totalLinks">
-          Loading {{ currentLinkIndex }} of {{ totalLinks }}
+          Loading {{ currentLinkIndex }} of {{ totalLinks }} links, max 3000 peers
           <div class="mdl-spinner mdl-js-spinner is-active"></div>
         </div>
       </header>
@@ -78,6 +78,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
         </section>
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-2">
           <div class="page-content map-container">
+            <p>The map will update every 10 seconds. The app might appear slow during peer discovery phase.</p>
             <div id="map"></div>
           </div>
         </section>
@@ -165,7 +166,7 @@ export class RMPStats {
     socket.emit('start', this.movie['Title'] + ' ' + this.movie['Year']);
     socket.on('peer', data => {
       if (this.peers.length < 3000) {
-        this.peers.push(data);
+        this.peers = this.peers.concat(data);
       } else {
         if (this._interval) {
           clearInterval(this._interval);
@@ -207,14 +208,20 @@ export class RMPStats {
       return result;
     }
 
-    var self = this;
+    var self = this,
+        chart;
 
-    // update chart data every 3 seconds
+    setTimeout(function() {
+      chart = new window['google'].visualization.GeoChart(document.getElementById('map'));
+      var data = window['google'].visualization.arrayToDataTable(groupBy([], 'country'));
+      chart.draw(data, {});
+    }, 1000);
+
+    // update chart data every 10 seconds
     this._interval = setInterval(function() {
-      var chart = new window['google'].visualization.GeoChart(document.getElementById('map'));
       var data = window['google'].visualization.arrayToDataTable(groupBy(self.peers, 'country'));
       chart.draw(data, {});
-    }, 3000);
+    }, 10*1000);
   }
 
   ngOnDestroy() {

@@ -46,7 +46,14 @@ io.set('origins', '*:*');
 io.on('connection', function(socket) {
   socket.on('start', function(msg) {
     var url = URL + msg,
-        totalPeers = 0;
+        totalPeers = 0,
+        peers = [],
+
+        // flush new peers every second
+        interval = setInterval(function() {
+            socket.emit('peer', peers);
+            peers = [];
+        }, 1000);
 
     request({
       uri: url,
@@ -86,13 +93,15 @@ io.on('connection', function(socket) {
 
             geo.ip = peer.host;
             geo.port = peer.port;
-            socket.emit('peer', geo);
+            peers.push(geo);
+
             totalPeers += 1;
 
             if (totalPeers > 3000) {
               dht.destroy(function() {
                 socket.emit('count', number);
                 if (isLast) {
+                  clearInterval(interval);
                   socket.emit('finished');
                 }
               });
@@ -101,6 +110,7 @@ io.on('connection', function(socket) {
         };
       }
 
+      // start processing new magnet link after previous link was finished
       for (var i = 0, l = links.length; i < l; i++) {
         setTimeout(getHandler(links.eq(i), i + 1, i === links.length - 1), 6*1000*i);
       }
