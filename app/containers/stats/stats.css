@@ -94,10 +94,21 @@ dd {
 }
 
 @media (max-width: 600px) {
+  .progress {
+    top: 65px;
+  }
+  .progress > span {
+    display: none;
+  }
+
   .autocomplete-container {
     width: 100%;
   }
   #map {
     height: 300px;
+  }
+
+  .peers-container {
+    overflow-x: auto;
   }
 }

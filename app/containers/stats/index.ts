@@ -27,10 +27,10 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
         </div>
 
         <div class="progress" [hidden]="isProcessing">
-          Loaded!
+          <span>Loaded!</span>
         </div>
         <div class="progress" [hidden]="!isProcessing || !totalLinks">
-          Loading {{ currentLinkIndex }} of {{ totalLinks }} links, max 3000 peers
+          <span>Loading {{ currentLinkIndex }} of {{ totalLinks }} links, max 3000 peers</span>
           <div class="mdl-spinner mdl-js-spinner is-active"></div>
         </div>
       </header>
@@ -90,9 +90,9 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
                   <th>#</th>
                   <th>IP</th>
                   <th>Port</th>
-                  <th>Country</th>
-                  <th>Region</th>
-                  <th>City</th>
+                  <th class="mdl-data-table__cell--non-numeric">Country</th>
+                  <th class="mdl-data-table__cell--non-numeric">Region</th>
+                  <th class="mdl-data-table__cell--non-numeric">City</th>
                   <th></th>
                 </tr>
               </thead>
@@ -101,12 +101,12 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
                   <td>{{ i + 1 }}</td>
                   <td>{{ peer.ip }}</td>
                   <td>{{ peer.port }}</td>
-                  <td class="f16">
+                  <td class="f16 mdl-data-table__cell--non-numeric">
                     <span class="flag {{ peer.country && peer.country.toLowerCase() || '' }}"></span>
                     {{ peer.countryName }}
                   </td>
-                  <td>{{ peer.country == 'US' && peer.region || '' }}</td>
-                  <td>{{ peer.city }}</td>
+                  <td class="mdl-data-table__cell--non-numeric">{{ peer.country == 'US' && peer.region || '' }}</td>
+                  <td class="mdl-data-table__cell--non-numeric">{{ peer.city }}</td>
                   <td>
                     <a href="http://maps.google.com/?ie=UTF8&hq=&ll={{ peer.ll }}&z=10" target="_blank">
                       <i class="material-icons">map</i>
