@@ -6,7 +6,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index'
   selector: 'rmp-home',
   template: `
     <div class="page-container">
-      <i class="material-icons search-icon logo">theaters</i>
+      <i class="material-icons logo">theaters</i>
       <div class="autocomplete-container">
         <rmp-autocomplete></rmp-autocomplete>
       </div>

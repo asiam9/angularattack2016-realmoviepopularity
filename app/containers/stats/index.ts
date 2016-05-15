@@ -18,7 +18,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
           <a href="#scroll-tab-1" class="mdl-layout__tab">Info</a>
           <a href="#scroll-tab-2" class="mdl-layout__tab is-active">Map</a>
-          <a href="#scroll-tab-3" class="mdl-layout__tab">Peers</a>
+          <a href="#scroll-tab-3" class="mdl-layout__tab">Peers <span [hidden]="peers.length == 0">({{ peers.length }})</span></a>
         </div>
       </header>
       <div class="mdl-layout__drawer">
@@ -70,7 +70,39 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
           <div class="page-content">Map</div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-3">
-          <div class="page-content">Stats</div>
+          <div class="page-content peers-container">
+            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>IP</th>
+                  <th>Port</th>
+                  <th>Country</th>
+                  <th>Region</th>
+                  <th>City</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let peer of peers; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ peer.ip }}</td>
+                  <td>{{ peer.port }}</td>
+                  <td class="f16">
+                    <span class="flag {{ peer.country && peer.country.toLowerCase() || '' }}"></span>
+                    {{ peer.countryName }}
+                  </td>
+                  <td>{{ peer.country == 'US' && peer.region || '' }}</td>
+                  <td>{{ peer.city }}</td>
+                  <td>
+                    <a href="http://maps.google.com/?ie=UTF8&hq=&ll={{ peer.ll }}&z=10" target="_blank">
+                      <i class="material-icons">map</i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
       </main>
     </div>
@@ -82,8 +114,11 @@ export class RMPStats {
   movie: Object;
   movieInfo: Object = {};
   posterUrl: string = '';
+  peers: Object[] = [];
 
-  private _serverUrl: string = 'https://limitless-journey-76225.herokuapp.com/api/image';
+  private isProcessing: boolean = true;
+  private _serverUrl: string = 'http://localhost:8081/';
+  //private _serverUrl: string = 'https://limitless-journey-76225.herokuapp.com/';
 
   constructor(private _routeParams: RouteParams,
               private _http: Http) {
@@ -105,7 +140,11 @@ export class RMPStats {
       .map(res => res.json())
       .subscribe(res => {
         this.movieInfo = res;
-        this.posterUrl = this._serverUrl + '?url=' + this.movieInfo['Poster'];
+        this.posterUrl = this._serverUrl + 'api/image?url=' + this.movieInfo['Poster'];
       });
+
+    let socket = window['io'](this._serverUrl);
+    socket.emit('start', this.movie['Title'] + ' ' + this.movie['Year']);
+    socket.on('peer', data => this.peers.push(data));
   }
 }

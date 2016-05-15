@@ -44,6 +44,16 @@ dd {
   font-size: 12px;
 }
 
+.peers-container {
+  padding: 30px 50px;
+}
+.mdl-data-table {
+  width: 100%;
+}
+.flag {
+  margin-right: 5px;
+}
+
 @media (max-width: 600px) {
   .autocomplete-container {
     width: 100%;
