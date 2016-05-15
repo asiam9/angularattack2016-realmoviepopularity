@@ -33,7 +33,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
             <hr>
             <div class="mdl-grid">
               <div class="mdl-cell mdl-cell--2-col">
-                <img [src]="movieInfo.Poster" class="movie-poster" />
+                <img [src]="posterUrl" class="movie-poster" />
               </div>
               <div class="mdl-cell mdl-cell--4-col">
                 <dl>
@@ -81,6 +81,9 @@ export class RMPStats {
 
   movie: Object;
   movieInfo: Object = {};
+  posterUrl: string = '';
+
+  private _serverUrl: string = 'https://limitless-journey-76225.herokuapp.com/api/image';
 
   constructor(private _routeParams: RouteParams,
               private _http: Http) {
@@ -100,6 +103,9 @@ export class RMPStats {
     // get full movie info
     this._http.get(`https://www.omdbapi.com/?t=${title}&y=${year}&plot=full&r=json`)
       .map(res => res.json())
-      .subscribe(res => this.movieInfo = res);
+      .subscribe(res => {
+        this.movieInfo = res;
+        this.posterUrl = this._serverUrl + '?url=' + this.movieInfo['Poster'];
+      });
   }
 }
