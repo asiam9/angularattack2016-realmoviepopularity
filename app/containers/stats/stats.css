@@ -16,6 +16,17 @@
   vertical-align: middle;
 }
 
+.mdl-layout-icon {
+  left: 20px;
+  top: 10px;
+}
+.mdl-layout-icon a {
+  color: #fff;
+}
+.mdl-layout-icon > a > i {
+  font-size: 28px;
+}
+
 .info-container {
   padding: 0 50px;
 }

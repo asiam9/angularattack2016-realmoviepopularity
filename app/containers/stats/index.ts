@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouteParams } from '@angular/router-deprecated';
+import { RouteParams, RouterLink } from '@angular/router-deprecated';
 import { Http } from '@angular/http';
 import { RMPAutocomplete } from '../../components/autocomplete/index';
 
@@ -9,6 +9,11 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
   template: `
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header">
+        <div class="mdl-layout-icon">
+          <a [routerLink]="['Home']" title="Back">
+            <i class="material-icons">arrow_back</i>
+          </a>
+        </div>
         <div class="mdl-layout__header-row">
           <span class="mdl-layout-title autocomplete-container">
             <rmp-autocomplete [movie]="movie"></rmp-autocomplete>
@@ -29,9 +34,6 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
           <div class="mdl-spinner mdl-js-spinner is-active"></div>
         </div>
       </header>
-      <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">Menu</span>
-      </div>
       <main class="mdl-layout__content">
         <section class="mdl-layout__tab-panel" id="scroll-tab-1">
           <div class="page-content info-container">
@@ -117,7 +119,7 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
       </main>
     </div>
   `,
-  directives: [RMPAutocomplete]
+  directives: [RMPAutocomplete, RouterLink]
 })
 export class RMPStats {
 
