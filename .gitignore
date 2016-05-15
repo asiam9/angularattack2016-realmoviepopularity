@@ -1,6 +1,9 @@
 node_modules
 jspm_packages
+dist
 npm-debug.log
+*.js
+*.js.map
 app/**/*.js
 app/**/*.js.map
 *.DS_Store
