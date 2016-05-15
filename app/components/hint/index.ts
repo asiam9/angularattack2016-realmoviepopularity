@@ -16,9 +16,7 @@ function compileToComponent(template) {
   selector: 'rmp-hint',
   template: `
     <div class="hint">
-      {{ hint.before }}
-      <a [hidden]="!hint.link" [routerLink]="['Stats', {year: hint.year, title: hint.title}]">{{ hint.link }}</a>
-      {{ hint.after }}
+      {{ hint.before }}<a [hidden]="!hint.link" [routerLink]="['Stats', {year: hint.year, title: hint.title}]">{{ hint.link }}</a>{{ hint.after }}
     </div>
   `,
   directives: [RouterLink]
@@ -53,6 +51,27 @@ export class RMPHint {
         link: 'The Shawshank Redemption',
         year: 1994,
         after: '.'
+      },
+      {
+        before: 'Russia loves ',
+        title: 'The Revenant',
+        link: 'The Revenant',
+        year: 2015,
+        after: '!'
+      },
+      {
+        before: 'Canada is fascinated by ',
+        title: 'Silicon Valley',
+        link: `HBO's Silicon Valley`,
+        year: '2014-',
+        after: '.'
+      },
+      {
+        before: 'Can you guess what country likes ',
+        title: 'Citizen Kane',
+        link: 'Citizen Kane',
+        year: 1941,
+        after: ' the most?'
       }
     ];
 

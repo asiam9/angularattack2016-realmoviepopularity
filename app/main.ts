@@ -6,9 +6,9 @@ import { FORM_PROVIDERS } from '@angular/common';
 
 import { AppComponent } from './containers/app';
 
-//if (process.env.ENV === 'production') {
-  enableProdMode();
-//}
+enableProdMode();
+
+window['google'].charts.load('current', {'packages':['geochart']});
 
 bootstrap(AppComponent, [
   ROUTER_PROVIDERS,

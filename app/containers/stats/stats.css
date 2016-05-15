@@ -72,7 +72,7 @@ dd {
   padding: 30px 50px;
 }
 #map {
-  height: calc(100% - 120px);
+  height: calc(100% - 200px);
   width: 100%;
 }
 

@@ -157,6 +157,36 @@ export class RMPStats {
         this.posterUrl = this._serverUrl + 'api/image?url=' + this.movieInfo['Poster'];
       });
 
+    this.isProcessing = true;
+
+    let socket = window['io'](this._serverUrl);
+    socket.emit('start', this.movie['Title'] + ' ' + this.movie['Year']);
+    socket.on('peer', data => {
+      if (this.peers.length < 3000) {
+        this.peers.push(data);
+      } else {
+        if (this._interval) {
+          clearInterval(this._interval);
+          this.isProcessing = false;
+        }
+      }
+    });
+    socket.on('total', data => this.totalLinks = data);
+    socket.on('count', data => this.currentLinkIndex = data);
+
+    // stop updating when all links were processed
+    socket.on('finished', () => {
+      this.isProcessing = false;
+
+      if (this._interval) {
+        clearInterval(this._interval);
+      }
+    })
+  }
+
+  ngAfterContentInit() {
+    
+    // group peers by country
     function groupBy(arr, key) {
       var result = [['Country', 'Peers']];
       arr.forEach(function(item) {
@@ -175,38 +205,14 @@ export class RMPStats {
       return result;
     }
 
-    window['google'].charts.load('current', {'packages':['geochart']});
-    window['google'].charts.setOnLoadCallback(draw);
-
     var self = this;
-    function draw() {
+
+    // update chart data every 3 seconds
+    this._interval = setInterval(function() {
       var chart = new window['google'].visualization.GeoChart(document.getElementById('map'));
-
-      // update chart data every second
-      self._interval = setInterval(function() {
-        var data = window['google'].visualization.arrayToDataTable(groupBy(self.peers, 'country'));
-        chart.draw(data, {});
-      }, 3000);
-    }
-
-    this.isProcessing = true;
-
-    let socket = window['io'](this._serverUrl);
-    socket.emit('start', this.movie['Title'] + ' ' + this.movie['Year']);
-    socket.on('peer', data => {
-      this.peers.push(data);
-    });
-    socket.on('total', data => this.totalLinks = data);
-    socket.on('count', data => this.currentLinkIndex = data);
-
-    // stop updating when all links were processed
-    socket.on('finished', () => {
-      this.isProcessing = false;
-
-      if (this._interval) {
-        clearInterval(this._interval);
-      }
-    })
+      var data = window['google'].visualization.arrayToDataTable(groupBy(self.peers, 'country'));
+      chart.draw(data, {});
+    }, 3000);
   }
 
   ngOnDestroy() {

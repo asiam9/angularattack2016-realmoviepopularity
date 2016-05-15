@@ -17,7 +17,7 @@ h1 {
   cursor: default;
   float: left;
   font-size: 100px;
-  margin-top: -20px;
+  margin-top: 2px;
 }
 
 .autocomplete-container {

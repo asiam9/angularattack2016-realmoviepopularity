@@ -45,7 +45,8 @@ const URL = 'https://kat.cr/usearch/';
 io.set('origins', '*:*');
 io.on('connection', function(socket) {
   socket.on('start', function(msg) {
-    var url = URL + msg;
+    var url = URL + msg,
+        totalPeers = 0;
 
     request({
       uri: url,
@@ -86,6 +87,16 @@ io.on('connection', function(socket) {
             geo.ip = peer.host;
             geo.port = peer.port;
             socket.emit('peer', geo);
+            totalPeers += 1;
+
+            if (totalPeers > 3000) {
+              dht.destroy(function() {
+                socket.emit('count', number);
+                if (isLast) {
+                  socket.emit('finished');
+                }
+              });
+            }
           });
         };
       }
