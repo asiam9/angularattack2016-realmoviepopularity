@@ -14,6 +14,13 @@ import { RMPHint } from '../../components/hint/index';
         <rmp-hint></rmp-hint>
       </div>
     </div>
+    <div class="info-container">
+      <p>The app shows real movie statistics based on downloads using BitTorrent protocol.
+      It scrambles the data from one of the most popular torrent trackers, finds magnet links and uses
+      peer discovery to find users who downloads particular movies. After that, it applies GeoIP to
+      found address to show them on map.</p>
+      <p>It does not download any content, only metadata.</p>
+    </div>
   `,
   directives: [RMPAutocomplete, RMPHint]
 })

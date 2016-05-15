@@ -131,8 +131,8 @@ export class RMPStats {
 
   private isProcessing: boolean = true;
   private _interval: any;
-  private _serverUrl: string = 'http://localhost:8081/';
-  //private _serverUrl: string = 'https://limitless-journey-76225.herokuapp.com/';
+  //private _serverUrl: string = 'http://localhost:8081/';
+  private _serverUrl: string = 'https://limitless-journey-76225.herokuapp.com/';
 
   constructor(private _routeParams: RouteParams,
               private _http: Http) {
@@ -185,7 +185,7 @@ export class RMPStats {
   }
 
   ngAfterContentInit() {
-    
+
     // group peers by country
     function groupBy(arr, key) {
       var result = [['Country', 'Peers']];
