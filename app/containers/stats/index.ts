@@ -20,6 +20,14 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
           <a href="#scroll-tab-2" class="mdl-layout__tab is-active">Map</a>
           <a href="#scroll-tab-3" class="mdl-layout__tab">Peers <span [hidden]="peers.length == 0">({{ peers.length }})</span></a>
         </div>
+
+        <div class="progress" [hidden]="isProcessing">
+          Loaded!
+        </div>
+        <div class="progress" [hidden]="!isProcessing || !totalLinks">
+          Loading {{ currentLinkIndex }} of {{ totalLinks }}
+          <div class="mdl-spinner mdl-js-spinner is-active"></div>
+        </div>
       </header>
       <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">Menu</span>
@@ -67,7 +75,9 @@ import { RMPAutocomplete } from '../../components/autocomplete/index';
           </div>
         </section>
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-2">
-          <div class="page-content">Map</div>
+          <div class="page-content map-container">
+            <div id="map"></div>
+          </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-3">
           <div class="page-content peers-container">
@@ -116,7 +126,11 @@ export class RMPStats {
   posterUrl: string = '';
   peers: Object[] = [];
 
+  currentLinkIndex: number = 1;
+  totalLinks: number;
+
   private isProcessing: boolean = true;
+  private _interval: any;
   private _serverUrl: string = 'http://localhost:8081/';
   //private _serverUrl: string = 'https://limitless-journey-76225.herokuapp.com/';
 
@@ -143,8 +157,61 @@ export class RMPStats {
         this.posterUrl = this._serverUrl + 'api/image?url=' + this.movieInfo['Poster'];
       });
 
+    function groupBy(arr, key) {
+      var result = [['Country', 'Peers']];
+      arr.forEach(function(item) {
+
+        var c = result.filter(function(val) {
+          return val[0] === item[key];
+        })[0];
+        if (!c) {
+          c = [item[key], 0];
+          result.push(c);
+        }
+
+        c[1] += 1;
+
+      });
+      return result;
+    }
+
+    window['google'].charts.load('current', {'packages':['geochart']});
+    window['google'].charts.setOnLoadCallback(draw);
+
+    var self = this;
+    function draw() {
+      var chart = new window['google'].visualization.GeoChart(document.getElementById('map'));
+
+      // update chart data every second
+      self._interval = setInterval(function() {
+        var data = window['google'].visualization.arrayToDataTable(groupBy(self.peers, 'country'));
+        chart.draw(data, {});
+      }, 3000);
+    }
+
+    this.isProcessing = true;
+
     let socket = window['io'](this._serverUrl);
     socket.emit('start', this.movie['Title'] + ' ' + this.movie['Year']);
-    socket.on('peer', data => this.peers.push(data));
+    socket.on('peer', data => {
+      this.peers.push(data);
+    });
+    socket.on('total', data => this.totalLinks = data);
+    socket.on('count', data => this.currentLinkIndex = data);
+
+    // stop updating when all links were processed
+    socket.on('finished', () => {
+      this.isProcessing = false;
+
+      if (this._interval) {
+        clearInterval(this._interval);
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    if (this._interval) {
+      clearInterval(this._interval);
+    }
   }
 }

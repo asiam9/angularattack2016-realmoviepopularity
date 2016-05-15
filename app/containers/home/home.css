@@ -1,8 +1,15 @@
 .page-container {
   position: absolute;
   left: calc(50% - 260px);
-  top: calc(50% - 50px);
+  top: calc(50% - 150px);
   width: 520px;
+}
+
+h1 {
+  color: #303F9F;
+  font-weight: 300;
+  text-align: center;
+  font-size: 53px;
 }
 
 .logo {

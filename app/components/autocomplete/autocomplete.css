@@ -4,6 +4,8 @@
 
 .autocomplete-results {
   box-shadow: 0 2px 5px rgba(0,0,0,.25);
+  background: #fff;
+  z-index: 5;
   left: 0;
   list-style: none;
   margin: 0;
@@ -16,6 +18,8 @@
 }
 
 .autocomplete-result {
+  background: fff;
+  color: #000;
   font-size: 14px;
   overflow: hidden;
   padding: 0 15px;
@@ -51,14 +55,6 @@
 }
 .inverse .textfield__input {
   color: #fff;
-}
-.inverse .autocomplete-results {
-  background: #fff;
-  z-index: 5;
-}
-.inverse .autocomplete-result {
-  background: fff;
-  color: #000;
 }
 
 @media (max-width: 600px) {

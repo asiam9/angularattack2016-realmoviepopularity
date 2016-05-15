@@ -53,24 +53,21 @@ io.on('connection', function(socket) {
     }, function(err, resp, body) {
       var $ = cheerio.load(body);
       var links = $('#mainSearchTable table tr .ka-magnet');
-      console.log(links.length);
+      socket.emit('total', links.length);
 
-      function getHandler(link) {
+      function getHandler(link, number, isLast) {
         return function() {
           var uri = link.parent().attr('href');
-          console.log(uri);
-
           var parsed = magnet(uri);
           var dht = new DHT();
-
-          dht.listen(function () {
-            console.log('now listening');
-          });
+          dht.listen();
 
           setTimeout(function() {
             dht.destroy(function() {
-              console.log('destroyed');
-              socket.emit('finished');
+              socket.emit('count', number);
+              if (isLast) {
+                socket.emit('finished');
+              }
             });
           }, 5 * 1000);
 
@@ -82,7 +79,8 @@ io.on('connection', function(socket) {
             if (!geo) {
               geo = {};
             } else {
-              geo.countryName = countries[geo.country].name;
+              var country = countries[geo.country];
+              geo.countryName = country ? country.name : '';
             }
 
             geo.ip = peer.host;
@@ -93,7 +91,7 @@ io.on('connection', function(socket) {
       }
 
       for (var i = 0, l = links.length; i < l; i++) {
-        setTimeout(getHandler(links.eq(i)), 10*1000*i);
+        setTimeout(getHandler(links.eq(i), i + 1, i === links.length - 1), 6*1000*i);
       }
 
     });
