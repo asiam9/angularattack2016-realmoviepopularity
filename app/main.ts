@@ -6,7 +6,9 @@ import { FORM_PROVIDERS } from '@angular/common';
 
 import { AppComponent } from './containers/app';
 
-enableProdMode();
+//if (process.env.ENV === 'production') {
+  enableProdMode();
+//}
 
 bootstrap(AppComponent, [
   ROUTER_PROVIDERS,

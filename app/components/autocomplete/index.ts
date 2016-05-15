@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
 @Component({
-  styleUrls: ['./app/components/autocomplete/autocomplete.css'],
+  styles: [require('./autocomplete.css')],
   selector: 'rmp-autocomplete',
   host: {
     '(document:click)': 'handleClick($event)',

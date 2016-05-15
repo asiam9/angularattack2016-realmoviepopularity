@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RMPAutocomplete } from '../../components/autocomplete/index'
 
 @Component({
-  styleUrls: ['../app/containers/home/home.css'],
+  styles: [require('./home.css')],
   selector: 'rmp-home',
   template: `
     <div class="page-container">

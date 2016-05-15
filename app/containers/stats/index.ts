@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import { RMPAutocomplete } from '../../components/autocomplete/index';
 
 @Component({
-  styleUrls: ['../app/containers/stats/stats.css'],
+  styles: [require('./stats.css')],
   selector: 'rmp-stats',
   template: `
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
